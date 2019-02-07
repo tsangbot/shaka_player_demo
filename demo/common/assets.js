@@ -29,6 +29,7 @@
 var shakaAssets = {};  // eslint-disable-line no-var
 
 
+
 /** @enum {string} */
 shakaAssets.Encoder = {
   UNKNOWN: 'Unknown',
@@ -292,11 +293,11 @@ shakaAssets.mpxResponseFilter = function(type, response) {
 shakaAssets.mpxRequestFilter = function(type, request) {
     if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
     request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
-    request.uris[0] += $('#mpx_token').val();
+    request.uris[0] += document.getElementById('mpx_token').value;
     request.method = "POST";
     request.body = JSON.stringify({
         getWidevineLicense: {
-            releasePid: $('#video_rpid').val(),
+            releasePid: document.getElementById('video_rpid').value,
             widevineChallenge: window.btoa(String.fromCharCode.apply(null, new Uint8Array(request.body)))
         }
     });
