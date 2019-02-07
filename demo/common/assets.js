@@ -255,6 +255,55 @@ shakaAssets.UplynkRequestFilter = function(type, request) {
 // }}}
 
 
+// Custom callbacks {{{
+/**
+ * A response filter for mpx manifest responses.
+ * This allows us to get the license prefix that is necessary
+ * to later generate a proper license response.
+ * @param {shaka.net.NetworkingEngine.RequestType} type
+ * @param {shaka.extern.Response} response
+ */
+shakaAssets.mpxResponseFilter = function(type, response) {
+  if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
+  let json = String.fromCharCode.apply(null, new Uint8Array(response.data));
+  let obj = JSON.parse(json);
+
+  let headerString = obj['header'];
+  // Do something with the header...
+
+  // Check if we actually got a license, or if we got an error:
+  if (!obj['getWidevineLicenseResponse']) {
+      console.log('Did not get Widevide Modular license.  Response was:', JSON.stringify(obj, null, 4));
+      return null;
+  }
+  // obj['license'] is a string, so encode it into a Uint8Array.
+  let licenseString = obj['getWidevineLicenseResponse']['license'];
+  console.log('Widevine license:', licenseString);
+  response.data = new Uint8Array(BASE64.decodeArray(licenseString));
+};
+
+
+
+/**
+ * A license request filter for mpx license requests.
+ * @param {shaka.net.NetworkingEngine.RequestType} type
+ * @param {shaka.extern.Request} request
+ */
+shakaAssets.mpxRequestFilter = function(type, request) {
+    if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
+    request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
+    request.uris[0] += $('#mpx_token').val();
+    request.method = "POST";
+    request.body = JSON.stringify({
+        getWidevineLicense: {
+            releasePid: $('#video_rpid').val(),
+            widevineChallenge: window.btoa(String.fromCharCode.apply(null, new Uint8Array(request.body)))
+        }
+    });
+};
+// }}}
+
+
 /** @const {!Array.<shakaAssets.AssetInfo>} */
 shakaAssets.testAssets = [
   // Shaka assets {{{
@@ -1366,5 +1415,42 @@ shakaAssets.testAssets = [
     requestFilter: shakaAssets.UplynkRequestFilter,
     responseFilter: shakaAssets.UplynkResponseFilter,
   },
+    {
+        name: 'Brian Test content 1 (HLS, MP4, Widevine)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_1/h264_master.m3u8',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=9KqjHKUeDOLP&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+    },
+    {
+        name: 'Brian Test content 2 (HLS, MP4, Widevine)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/pacakged_2/h264_master.m3u8',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=9KqjHKUeDOLP&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+    },
+
   // }}}
 ];
