@@ -3,11 +3,13 @@
 // from: http://bannister.us/weblog/2007/06/09/simple-base64-encodedecode-javascript/
 // Handles encode/decode of ASCII and Unicode strings.
 
-var UTF8 = {};
+/* eslint-disable */
+
+var UTF8 = {};  // eslint-disable-line no-var
 UTF8.encode = function(s) {
-    var u = [];
-    for (var i = 0; i < s.length; ++i) {
-        var c = s.charCodeAt(i);
+    let u = [];
+    for (let i = 0; i < s.length; ++i) {
+        let c = s.charCodeAt(i);
         if (c < 0x80) {
             u.push(c);
         } else if (c < 0x800) {
@@ -27,10 +29,10 @@ UTF8.encode = function(s) {
     return u;
 };
 UTF8.decode = function(u) {
-    var a = [];
-    var i = 0;
+    let a = [];
+    let i = 0;
     while (i < u.length) {
-        var v = u[i++];
+        let v = u[i++];
         if (v < 0x80) {
             // no need to mask byte
         } else if (v < 0xE0) {
@@ -51,105 +53,105 @@ UTF8.decode = function(u) {
     return a.join('');
 };
 
-var BASE64 = {};
-(function(T){
-    var encodeArray = function(u) {
-        var i = 0;
-        var a = [];
-        var n = 0 | (u.length / 3);
-        while (0 < n--) {
-            var v = (u[i] << 16) + (u[i+1] << 8) + u[i+2];
+var BASE64 = {};  // eslint-disable-line no-var
+(function(T) {
+    let encodeArray = function(u) {
+        let i = 0;
+        let a = [];
+        let n = 0 | (u.length / 3);
+        while (n-- > 0) {
+            var v = (u[i] << 16) + (u[i+1] << 8) + u[i+2];  // eslint-disable-line no-var
             i += 3;
             a.push(T.charAt(63 & (v >> 18)));
             a.push(T.charAt(63 & (v >> 12)));
             a.push(T.charAt(63 & (v >> 6)));
             a.push(T.charAt(63 & v));
         }
-        if (2 == (u.length - i)) {
-            var v = (u[i] << 16) + (u[i+1] << 8);
+        if ((u.length - i) == 2) {
+            var v = (u[i] << 16) + (u[i+1] << 8);  // eslint-disable-line no-var
             a.push(T.charAt(63 & (v >> 18)));
             a.push(T.charAt(63 & (v >> 12)));
             a.push(T.charAt(63 & (v >> 6)));
             a.push('=');
-        } else if (1 == (u.length - i)) {
-            var v = (u[i] << 16);
+        } else if ((u.length - i) == 1) {
+            var v = (u[i] << 16);  // eslint-disable-line no-var
             a.push(T.charAt(63 & (v >> 18)));
             a.push(T.charAt(63 & (v >> 12)));
             a.push('==');
         }
         return a.join('');
-    }
-    var R = (function(){
-        var a = [];
-        for (var i=0; i<T.length; ++i) {
+    };
+    let R = (function() {
+        let a = [];
+        for (let i=0; i<T.length; ++i) {
             a[T.charCodeAt(i)] = i;
         }
         a['='.charCodeAt(0)] = 0;
         return a;
     })();
-    var decodeArray = function(s) {
-        var i = 0;
-        var u = [];
-        var n = 0 | (s.length / 4);
-        while (0 < n--) {
-            var v = (R[s.charCodeAt(i)] << 18) + (R[s.charCodeAt(i+1)] << 12) + (R[s.charCodeAt(i+2)] << 6) + R[s.charCodeAt(i+3)];
+    let decodeArray = function(s) {
+        let i = 0;
+        let u = [];
+        let n = 0 | (s.length / 4);
+        while (n-- > 0) {
+            let v = (R[s.charCodeAt(i)] << 18) + (R[s.charCodeAt(i+1)] << 12) + (R[s.charCodeAt(i+2)] << 6) + R[s.charCodeAt(i+3)];  // eslint-disable-line max-len
             u.push(255 & (v >> 16));
             u.push(255 & (v >> 8));
             u.push(255 & v);
             i += 4;
         }
         if (u) {
-            if ('=' == s.charAt(i-2)) {
+            if (s.charAt(i-2) == '=') {
                 u.pop();
                 u.pop();
-            } else if ('=' == s.charAt(i-1)) {
+            } else if (s.charAt(i-1) == '=') {
                 u.pop();
             }
         }
         return u;
-    }
-    var ASCII = {};
+    };
+    let ASCII = {};
     ASCII.encode = function(s) {
-        var u = [];
-        for (var i = 0; i<s.length; ++i) {
+        let u = [];
+        for (let i = 0; i<s.length; ++i) {
             u.push(s.charCodeAt(i));
         }
         return u;
     };
     ASCII.decode = function(u) {
-        for (var i = 0; i<s.length; ++i) {
+        for (let i = 0; i<s.length; ++i) {
             a[i] = String.fromCharCode(a[i]);
         }
         return a.join('');
     };
     BASE64.decodeArray = function(s) {
-        var u = decodeArray(s);
+        let u = decodeArray(s);
         return new Uint8Array(u);
     };
     BASE64.encodeArray = function(u) {
         return encodeArray(u);
     };
     BASE64.encodeASCII = function(s) {
-        var u = ASCII.encode(s);
+        let u = ASCII.encode(s);
         return encodeArray(u);
     };
     BASE64.decodeASCII = function(s) {
-        var a = decodeArray(s);
+        let a = decodeArray(s);
         return ASCII.decode(a);
     };
     BASE64.encode = function(s) {
-        var u = UTF8.encode(s);
+        let u = UTF8.encode(s);
         return encodeArray(u);
     };
     BASE64.decode = function(s) {
-        var u = decodeArray(s);
+        let u = decodeArray(s);
         return UTF8.decode(u);
     };
-})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+})('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/');
 
 if (undefined === btoa) {
-    var btoa = BASE64.encode;
+    var btoa = BASE64.encode;  // eslint-disable-line no-var
 }
 if (undefined === atob) {
-    var atob = BASE64.decode;
+    var atob = BASE64.decode;  // eslint-disable-line no-var
 }

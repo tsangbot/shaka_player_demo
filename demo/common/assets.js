@@ -309,6 +309,72 @@ shakaAssets.mpxRequestFilter = function(type, request) {
 shakaAssets.testAssets = [
   // Shaka assets {{{
   {
+      name: 'Brian Test content 4 - Trailer (HLS, MP4)',
+      manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_4/h264_master.m3u8',
+
+      encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+      source: shakaAssets.Source.SHAKA,
+      drm: [],
+      features: [
+          shakaAssets.Feature.HLS,
+          shakaAssets.Feature.MP4,
+      ],
+  },
+  {
+        name: 'DAZN Test content (DASH, Widevine)',
+        manifestUri: 'https://devdc1livededazn-a.akamaihd.net/out/u/dev-dazn-linear-dc1-TEST.mpd',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=6eoCrUPEBfkA&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+  },
+  {
+        name: 'Brian Test content 3 - Trailer (HLS, MP4, Widevine)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_3/h264_master.m3u8',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=1WrQaHUmwztK&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+  },
+  {
+      name: 'Erik Test content  - Trailer (HLS, MP4, Widevine)',
+      manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/test/fmp4-cenc-test/S23456_3.ism/master.m3u8?hls_fmp4',
+
+      encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+      source: shakaAssets.Source.SHAKA,
+      drm: [shakaAssets.KeySystem.WIDEVINE],
+      features: [
+          shakaAssets.Feature.HLS,
+          shakaAssets.Feature.MP4,
+      ],
+
+      licenseServers: {
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=5mCe4dVWF4KL&token=',
+      },
+      requestFilter: shakaAssets.mpxRequestFilter,
+      responseFilter: shakaAssets.mpxResponseFilter,
+  },
+  {
     name: 'Angel One (multicodec, multilingual)',
     manifestUri: 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
 
@@ -1416,42 +1482,5 @@ shakaAssets.testAssets = [
     requestFilter: shakaAssets.UplynkRequestFilter,
     responseFilter: shakaAssets.UplynkResponseFilter,
   },
-    {
-        name: 'Brian Test content 1 (HLS, MP4, Widevine)',
-        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_1/h264_master.m3u8',
-
-        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-        source: shakaAssets.Source.SHAKA,
-        drm: [shakaAssets.KeySystem.WIDEVINE],
-        features: [
-            shakaAssets.Feature.HLS,
-            shakaAssets.Feature.MP4,
-        ],
-
-        licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=9KqjHKUeDOLP&token=',
-        },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
-    },
-    {
-        name: 'Brian Test content 2 (HLS, MP4, Widevine)',
-        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/pacakged_2/h264_master.m3u8',
-
-        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-        source: shakaAssets.Source.SHAKA,
-        drm: [shakaAssets.KeySystem.WIDEVINE],
-        features: [
-            shakaAssets.Feature.HLS,
-            shakaAssets.Feature.MP4,
-        ],
-
-        licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2699870361&_releasePid=9KqjHKUeDOLP&token=',
-        },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
-    },
-
   // }}}
 ];
