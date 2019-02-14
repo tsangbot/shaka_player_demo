@@ -84,6 +84,7 @@ shakaDemo.setupAssets_ = function() {
       first = first || option;
       if (asset.focus) first = option;
     }
+
   });
 
   if (first) {
@@ -339,6 +340,12 @@ shakaDemo.load = function() {
 
   let configureCertificate = Promise.resolve();
 
+  if (asset.releasePid) {
+      console.log('mpx release pid detected!');
+      let s = document.getElementById('video_rpid');
+      s.value = asset.releasePid;
+  }
+
   if (asset.certificateUri) {
     configureCertificate = shakaDemo.requestCertificate_(asset.certificateUri)
       .then(shakaDemo.configureCertificate_);
@@ -403,4 +410,9 @@ shakaDemo.unload = function() {
   if (!shakaDemo.castProxy_.isCasting()) {
     shakaDemo.controls_.setEnabledShakaControls(false);
   }
+  let s = document.getElementById('video_rpid');
+    if (s) {
+        console.log('mpx release pid removed!');
+        s.value = null;
+    }
 };
