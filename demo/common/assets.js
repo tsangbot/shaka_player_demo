@@ -354,6 +354,25 @@ shakaAssets.testAssets = [
         responseFilter: shakaAssets.mpxResponseFilter,
     },
     {
+        name: 'Viaplay Staging Test content 03 - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
+        releasePid: 'FGK9_ejRvdI_',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+    },
+    {
         name: 'Google test content -  Google Test Key (HLS, MP4, Widevine, Google, CBCS)',
         manifestUri: 'https://storage.googleapis.com/wvmedia/2018/cmaf/h264/24/llama/llama_h264_24fps_cmaf_hls_cbcs.m3u8',
 
