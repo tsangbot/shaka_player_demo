@@ -356,7 +356,7 @@ shakaAssets.testAssets = [
     {
         name: 'Viaplay Staging Test content 03 - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
-        releasePid: 'FGK9_ejRvdI_',
+        releasePid: 'AGdWx86XqcfU',
 
         encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
         source: shakaAssets.Source.SHAKA,
