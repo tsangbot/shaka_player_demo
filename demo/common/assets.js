@@ -354,9 +354,47 @@ shakaAssets.testAssets = [
         responseFilter: shakaAssets.mpxResponseFilter,
     },
     {
-        name: 'Viaplay Staging Test content 03 - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
+        name: 'Viaplay Staging Test by Erik - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
         releasePid: 'AGdWx86XqcfU',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+    },
+    {
+        name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (DASH, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_03/h264.mpd',
+        releasePid: 'Q611_O6x9_M_',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+        },
+        requestFilter: shakaAssets.mpxRequestFilter,
+        responseFilter: shakaAssets.mpxResponseFilter,
+    },
+    {
+        name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (HLS, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_03/h264_master.m3u8',
+        releasePid: 'Q611_O6x9_M_',
 
         encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
         source: shakaAssets.Source.SHAKA,
@@ -536,8 +574,8 @@ shakaAssets.testAssets = [
       manifestUri: 'https://dev-vod-hls-cdn2-vp.cdn.viaplay.tv/test/fmp4-cenc-test/S23456_7.ism/master.m3u8',
       // manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/S23456.ism/master.m3u8?hls_fmp4',
 
-      encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-      source: shakaAssets.Source.SHAKA,
+      encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+      source: shakaAssets.Source.UNIFIED_STREAMING,
       drm: [],
       features: [
           shakaAssets.Feature.HLS,
@@ -551,8 +589,8 @@ shakaAssets.testAssets = [
       // manifestUri: 'https://dev-vod1-hls-cdn1-vp-cdn-viaplay-tv.akamaized.net/test/fmp4-cenc-test/S23456_3.ism/master.m3u8?hls_fmp4',
       releasePid: '5mCe4dVWF4KL',
 
-        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-        source: shakaAssets.Source.SHAKA,
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
         drm: [shakaAssets.KeySystem.WIDEVINE],
         features: [
             shakaAssets.Feature.HLS,
@@ -571,8 +609,8 @@ shakaAssets.testAssets = [
         releasePid: 'WF1jowTTQaED',
 
 
-        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-        source: shakaAssets.Source.SHAKA,
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
         drm: [shakaAssets.KeySystem.WIDEVINE],
         features: [
             shakaAssets.Feature.HLS,
