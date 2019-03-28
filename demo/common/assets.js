@@ -263,25 +263,32 @@ shakaAssets.UplynkRequestFilter = function(type, request) {
  * to later generate a proper license response.
  * @param {shaka.net.NetworkingEngine.RequestType} type
  * @param {shaka.extern.Response} response
+ * @returns {void}
  */
-shakaAssets.mpxResponseFilter = function(type, response) {
+shakaAssets.mpxWidevineResponseFilter = function(type, response) {
   if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
-  let json = String.fromCharCode.apply(null, new Uint8Array(response.data));
-  let obj = JSON.parse(json);
+    const StringUtils = shaka.util.StringUtils;
+    const Uint8ArrayUtils = shaka.util.Uint8ArrayUtils;
+
+    // This is the wrapped license, which is a JSON string.
+    let wrappedString = StringUtils.fromUTF8(response.data);
+    // Parse the JSON string into an object.
+    let wrapped = JSON.parse(wrappedString);
+
+    // This is a base64-encoded version of the raw license.
+    let rawLicenseBase64 = wrapped['getWidevineLicenseResponse']['license'];
+    // Decode that base64 string into a Uint8Array and replace the response
+    // data.  The raw license will be fed to the Widevine CDM.
+    response.data = (Uint8ArrayUtils.fromBase64(rawLicenseBase64)).buffer;
 
 
-  // let headerString = obj['header'];
-  // Do something with the header...
-
-  // Check if we actually got a license, or if we got an error:
-  if (!obj['getWidevineLicenseResponse']) {
-      console.log('Did not get Widevide Modular license.  Response was:', JSON.stringify(obj, null, 4));
-      return null;
+    // Check if we actually got a license, or if we got an error:
+  if (!wrapped['getWidevineLicenseResponse']) {
+      console.log('Did not get Widevide Modular license.  Response was:', JSON.stringify(wrapped, null, 4));
+      // return null;
   }
-  // obj['license'] is a string, so encode it into a Uint8Array.
-  let licenseString = obj['getWidevineLicenseResponse']['license'];
-  console.log('Widevine license:', licenseString);
-  response.data = new Uint8Array(BASE64.decodeArray(licenseString));
+
+    console.log(wrapped);
 };
 
 
@@ -291,25 +298,49 @@ shakaAssets.mpxResponseFilter = function(type, response) {
  * @param {shaka.net.NetworkingEngine.RequestType} type
  * @param {shaka.extern.Request} request
  */
-shakaAssets.mpxRequestFilter = function(type, request) {
+shakaAssets.mpxWidevineRequestFilter = function(type, request) {
+    const StringUtils = shaka.util.StringUtils;
     if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
     request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
-    request.uris[0] += document.getElementById('mpx_token').value;
+    request.uris[0] += "&_releasePid=" + document.getElementById('video_rpid').value;
+    request.uris[0] += "&token=" + document.getElementById('mpx_token').value;
     if (document.getElementById('mpx_trace_to').value) {
         request.uris[0] += '&traceTo=mailto:' + document.getElementById('mpx_trace_to').value;
     }
     request.method = "POST";
 
-    request.body = JSON.stringify({
+    let wrappedJsonRequest = JSON.stringify({
         getWidevineLicense: {
             releasePid: document.getElementById('video_rpid').value,
             widevineChallenge: window.btoa(String.fromCharCode.apply(null, new Uint8Array(request.body)))
         }
     });
-    console.log('Widevine License request', request.body);
+    console.log('Widevine License request', wrappedJsonRequest);
+    request.body = StringUtils.toUTF8(wrappedJsonRequest);
+
 
 };
 // }}}
+
+/**
+ * A license request filter for mpx license requests.
+ * @param {shaka.net.NetworkingEngine.RequestType} type
+ * @param {shaka.extern.Request} request
+ */
+shakaAssets.mpxPlayReadyRequestFilter = function(type, request) {
+    if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
+    // request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
+    request.uris[0] += "&_releasePid=" + document.getElementById('video_rpid').value;
+    request.uris[0] += "&auth=" + document.getElementById('mpx_token').value;
+    if (document.getElementById('mpx_trace_to').value) {
+        request.uris[0] += '&traceTo=mailto:' + document.getElementById('mpx_trace_to').value;
+    }
+    request.method = "POST";
+    console.log('Playready License request');
+
+};
+// }}}
+
 
 
 /** @const {!Array.<shakaAssets.AssetInfo>} */
@@ -329,10 +360,10 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=AGdWx86XqcfU&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
     },
     {
         name: 'Viaplay Staging Test content 02 - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
@@ -348,29 +379,10 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
-    },
-    {
-        name: 'Viaplay Staging Test by Erik - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
-        releasePid: 'AGdWx86XqcfU',
-
-        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
-        source: shakaAssets.Source.UNIFIED_STREAMING,
-        drm: [shakaAssets.KeySystem.WIDEVINE],
-        features: [
-            shakaAssets.Feature.HLS,
-            shakaAssets.Feature.MP4,
-        ],
-
-        licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
-        },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
     },
     {
         name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (DASH, MP4, Widevine, mpx, CBCS)',
@@ -386,10 +398,10 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
     },
     {
         name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (HLS, MP4, Widevine, mpx, CBCS)',
@@ -405,10 +417,31 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=FGK9_ejRvdI_&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+    },
+    {
+        name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (DASH, MP4, PlayReady, mpx, CBCS)',
+        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_03/h264.mpd',
+        releasePid: 'Q611_O6x9_M_',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [
+            shakaAssets.KeySystem.PLAYREADY,
+        ],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.HIGH_DEFINITION,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=Q611_O6x9_M_&auth=f07JazCweBP23TK-w7s-wVD8AGC8cKB2',
+        },
+        // requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
     },
     {
         name: 'Google test content -  Google Test Key (HLS, MP4, Widevine, Google, CBCS)',
@@ -440,10 +473,10 @@ shakaAssets.testAssets = [
       ],
 
       licenseServers: {
-          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347&_releasePid=_tbLOcqZejQu&token=',
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347',
       },
-      requestFilter: shakaAssets.mpxRequestFilter,
-      responseFilter: shakaAssets.mpxResponseFilter,
+      requestFilter: shakaAssets.mpxWidevineRequestFilter,
+      responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
       name: 'Google test content -  Google Test Key (HLS, MP4, Widevine, Google, CENC)',
@@ -477,10 +510,10 @@ shakaAssets.testAssets = [
       ],
 
       licenseServers: {
-          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347&_releasePid=snjRmxSetdf_&token=',
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347',
       },
-      requestFilter: shakaAssets.mpxRequestFilter,
-      responseFilter: shakaAssets.mpxResponseFilter,
+      requestFilter: shakaAssets.mpxWidevineRequestFilter,
+      responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
       name: 'Brian Test content 4 - Trailer no DRM (HLS, MP4)',
@@ -508,10 +541,10 @@ shakaAssets.testAssets = [
       ],
 
       licenseServers: {
-          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347&_releasePid=j1eYeUdf7v5i&token=',
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347',
       },
-      requestFilter: shakaAssets.mpxRequestFilter,
-      responseFilter: shakaAssets.mpxResponseFilter,
+      requestFilter: shakaAssets.mpxWidevineRequestFilter,
+      responseFilter: shakaAssets.mpxWidevineResponseFilter,
 
   },
   {
@@ -544,10 +577,10 @@ shakaAssets.testAssets = [
       ],
 
       licenseServers: {
-          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347&_releasePid=YkxJ4HlRH1SL&token=',
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2705529347',
       },
-      requestFilter: shakaAssets.mpxRequestFilter,
-      responseFilter: shakaAssets.mpxResponseFilter,
+      requestFilter: shakaAssets.mpxWidevineRequestFilter,
+      responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
       name: 'DAZN 247 Stream (DASH, Widevine)',
@@ -563,13 +596,12 @@ shakaAssets.testAssets = [
       ],
 
       licenseServers: {
-          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2689352799&_releasePid=Mboj4GZlnYdX&token=',
+          'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2689352799',
       },
-      requestFilter: shakaAssets.mpxRequestFilter,
-      responseFilter: shakaAssets.mpxResponseFilter,
+      requestFilter: shakaAssets.mpxWidevineRequestFilter,
+      responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
-
-    {
+  {
       name: 'Viaplay - Erik Test content clear (HLS, MP4)',
       manifestUri: 'https://dev-vod-hls-cdn2-vp.cdn.viaplay.tv/test/fmp4-cenc-test/S23456_7.ism/master.m3u8',
       // manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/S23456.ism/master.m3u8?hls_fmp4',
@@ -581,8 +613,7 @@ shakaAssets.testAssets = [
           shakaAssets.Feature.HLS,
           shakaAssets.Feature.MP4,
       ],
-    },
-
+  },
   {
       name: 'Viaplay - Erik Test content  - ENCRYPTED 1 (HLS, MP4, Widevine)',
       manifestUri: 'https://dev-vod-hls-cdn2-vp.cdn.viaplay.tv/test/fmp4-cenc-test/S23456_3.ism/master.m3u8?hls_fmp4',
@@ -598,10 +629,10 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=5mCe4dVWF4KL&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
         name: 'Viaplay - Erik Test content  - ENCRYPTED 2 (HLS, MP4, Widevine)',
@@ -618,10 +649,85 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&_releasePid=WF1jowTTQaED&token=',
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-        requestFilter: shakaAssets.mpxRequestFilter,
-        responseFilter: shakaAssets.mpxResponseFilter,
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+  },
+    {
+        name: 'Viaplay Staging Test by Erik - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
+        releasePid: 'AGdWx86XqcfU',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+    },
+  {
+        name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, Widevine, mpx, CENC)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-1.ism/index.mpd',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+  },
+  {
+        name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, playReady, mpx, CENC)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-1.ism/index.mpd',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.PLAYREADY],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=uHqXPRKkKPuS&auth=Tx2XdS42UkZ-soNG8-vsATCecNByoGBI',
+        },
+
+  },
+  {
+        name: 'Viaplay Erik Test content - Multi DRM test Key (HLS, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-hls-test-1.ism/master.m3u8?hls_fmp4',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
     name: 'Angel One (multicodec, multilingual)',

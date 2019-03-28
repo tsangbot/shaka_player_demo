@@ -84,7 +84,6 @@ shakaDemo.setupAssets_ = function() {
       first = first || option;
       if (asset.focus) first = option;
     }
-
   });
 
   if (first) {

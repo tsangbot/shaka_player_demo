@@ -19,7 +19,6 @@
 /** @namespace */
 let ShakaDemoUtils = {};
 
-
 /**
  * @param {shakaAssets.AssetInfo} asset
  * @param {shaka.Player} player
