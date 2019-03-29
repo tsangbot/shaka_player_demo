@@ -84,7 +84,8 @@ const CRITICAL_RESOURCES = [
  */
 const OPTIONAL_RESOURCES = [
   'favicon.ico',
-  'https://shaka-player-demo.appspot.com/assets/poster.jpg',
+  // 'https://shaka-player-demo.appspot.com/assets/poster.jpg',
+    'app_logo_256.gif',
   'https://shaka-player-demo.appspot.com/assets/audioOnly.gif',
   '../node_modules/mux.js/dist/mux.js',
 ];

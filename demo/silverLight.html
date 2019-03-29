@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script>
+
+    // When the doc is ready
+    $(document).ready(function () {
+        var vars = getUrlVars();
+
+        if (vars.u) {
+            console.log('Got video url', vars.u);
+            $('#video_url').val(vars.u);
+
+        }
+        if (vars.r) {
+            $('#mss_video_laurl').val(generatePlayReadyLaurl(vars.r));
+        }
+
+        if (vars.t && vars.r) {
+
+        }
+    });
+
+    function initPlayer(url) {
+        $('#video_url').val(url);
+    }
+
+</script>
+</head>
+<body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+
+    <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-medium-1-1">
+
+            <article class="uk-article" id="main_article">
+
+                <h1 class="uk-article-title">ISM SilverLight Player</h1>
+
+                <div class="uk-grid">
+                    <div class="uk-width-1-1">
+                        <object data="data:application/x-silverlight-2," type="application/x-silverlight-2"
+                                height="800px" width="800px">
+                            <param name="source" value="slee/SSSSS.xap">
+                            <param name="onError" value="onSilverlightError">
+                            <param name="background" value="white">
+                            <param name="minRuntimeVersion" value="4.0.50826.0">
+                            <param name="autoUpgrade" value="true">
+                            <a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50826.0"
+                               style="text-decoration:none">
+                                <img src="slee/index_files/a.dms" alt="Get Microsoft Silverlight"
+                                     style="border-style:none">
+                            </a>
+                        </object>
+                        <iframe id="_sl_historyFrame"
+                                style="visibility:hidden;height:0px;width:0px;border:0px"></iframe>
+                    </div>
+
+                </div>
+
+            </article>
+            <article class="uk-article">
+                <pre class="uk-width-medium-1-1" id="logpane"></pre>
+            </article>
+
+        </div>
+    </div>
+
+</div>
+
+<body>
+
+</body>
+</html>

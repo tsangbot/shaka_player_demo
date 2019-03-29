@@ -2,25 +2,25 @@
   "name": "Shaka Player Demo",
   "short_name": "Shaka Player",
   "icons": [{
-      "src": "app_logo_144.png",
+      "src": "app_logo_144.gif",
       "sizes": "144x144",
-      "type": "image/png"
+      "type": "image/gif"
     }, {
-      "src": "app_logo_192.png",
+      "src": "app_logo_192.gif",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/gif"
     }, {
-      "src": "app_logo_256.png",
+      "src": "app_logo_256.gif",
       "sizes": "256x256",
-      "type": "image/png"
+      "type": "image/gif"
     }, {
-      "src": "app_logo_384.png",
+      "src": "app_logo_384.gif",
       "sizes": "384x384",
-      "type": "image/png"
+      "type": "image/gif"
     }, {
-      "src": "app_logo_512.png",
+      "src": "app_logo_512.gif",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/gif"
     }],
   "start_url": "./#compiled",
   "display": "standalone",

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<meta content="en-us" http-equiv="Content-Language">
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+	<link href="index_files/master.css" type="text/css" rel="stylesheet">
+	<title>Microsoft PlayReady Test Server - Silverlight and Expression Encoder</title>
+
+    <script type="text/javascript" src="index_files/Silverlight.js"></script>
+    <script type="text/javascript">
+        function onSilverlightError(sender, args) {
+            var appSource = "";
+            if (sender != null && sender != 0) {
+              appSource = sender.getHost().Source;
+            }
+            
+            var errorType = args.ErrorType;
+            var iErrorCode = args.ErrorCode;
+
+            if (errorType == "ImageError" || errorType == "MediaError") {
+              return;
+            }
+
+            var errMsg = "Unhandled Error in Silverlight Application " +  appSource + "\n" ;
+
+            errMsg += "Code: "+ iErrorCode + "    \n";
+            errMsg += "Category: " + errorType + "       \n";
+            errMsg += "Message: " + args.ErrorMessage + "     \n";
+
+            if (errorType == "ParserError") {
+                errMsg += "File: " + args.xamlFile + "     \n";
+                errMsg += "Line: " + args.lineNumber + "     \n";
+                errMsg += "Position: " + args.charPosition + "     \n";
+            }
+            else if (errorType == "RuntimeError") {           
+                if (args.lineNumber != 0) {
+                    errMsg += "Line: " + args.lineNumber + "     \n";
+                    errMsg += "Position: " +  args.charPosition + "     \n";
+                }
+                errMsg += "MethodName: " + args.methodName + "     \n";
+            }
+
+            throw new Error(errMsg);
+        }
+    </script>
+</head>
+
+<body style="margin-top:0;">
+<div style="background:#75BDE5;">
+<div class="centered-div-style">
+<p class="title1-style">PlayReady</p>
+
+<div class="centered-div-style">
+<p class="paragraph-text-style">&nbsp;</p>
+
+<h1 class="header1-style">SSSSS Test Player</h1>
+<p class="paragraph-text-style">&nbsp;</p>
+    <form id="form1" runat="server" style="height:650px">
+    <div id="silverlightControlHost">
+        <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" height="600px" width="800px">
+		  <param name="source" value="SSSSS.xap">
+		  <param name="onError" value="onSilverlightError">
+		  <param name="background" value="white">
+		  <param name="minRuntimeVersion" value="4.0.50826.0">
+		  <param name="autoUpgrade" value="true">
+		  <a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50826.0" style="text-decoration:none">
+ 			  <img src="index_files/a.dms" alt="Get Microsoft Silverlight" style="border-style:none">
+		  </a>
+	    </object><iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe></div>
+    </form>
+<p class="paragraph-text-style">&nbsp;</p>
+
+<h1 class="header1-style">PlayReady Test Server</h1>
+<p class="paragraph-text-style">See this page</p>
+
+<h1 class="header1-style">Expression Encoder</h1>
+<p class="paragraph-text-style">Use this key seed</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+
+
+
+</body></html>

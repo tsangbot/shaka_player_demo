@@ -330,7 +330,7 @@ shakaAssets.mpxWidevineRequestFilter = function(type, request) {
 shakaAssets.mpxPlayReadyRequestFilter = function(type, request) {
     if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
     // request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
-    request.uris[0] += "&_releasePid=" + document.getElementById('video_rpid').value;
+    request.uris[0] += "&releasePid=" + document.getElementById('video_rpid').value;
     request.uris[0] += "&auth=" + document.getElementById('mpx_token').value;
     if (document.getElementById('mpx_trace_to').value) {
         request.uris[0] += '&traceTo=mailto:' + document.getElementById('mpx_trace_to').value;
@@ -422,27 +422,27 @@ shakaAssets.testAssets = [
         requestFilter: shakaAssets.mpxWidevineRequestFilter,
         responseFilter: shakaAssets.mpxWidevineResponseFilter,
     },
-    {
-        name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (DASH, MP4, PlayReady, mpx, CBCS)',
-        manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_03/h264.mpd',
-        releasePid: 'Q611_O6x9_M_',
-
-        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
-        source: shakaAssets.Source.SHAKA,
-        drm: [
-            shakaAssets.KeySystem.PLAYREADY,
-        ],
-        features: [
-            shakaAssets.Feature.DASH,
-            shakaAssets.Feature.HIGH_DEFINITION,
-            shakaAssets.Feature.MP4,
-        ],
-
-        licenseServers: {
-            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=Q611_O6x9_M_&auth=f07JazCweBP23TK-w7s-wVD8AGC8cKB2',
-        },
-        // requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
-    },
+    // {
+    //     name: 'Viaplay Staging Test content 03 - Trailer with Multi DRM test Key (DASH, MP4, PlayReady, mpx, CBCS)',
+    //     manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_03/h264.mpd',
+    //     releasePid: 'Q611_O6x9_M_',
+    //
+    //     encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+    //     source: shakaAssets.Source.SHAKA,
+    //     drm: [
+    //         shakaAssets.KeySystem.PLAYREADY,
+    //     ],
+    //     features: [
+    //         shakaAssets.Feature.DASH,
+    //         shakaAssets.Feature.HIGH_DEFINITION,
+    //         shakaAssets.Feature.MP4,
+    //     ],
+    //
+    //     licenseServers: {
+    //         'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=Q611_O6x9_M_&auth=f07JazCweBP23TK-w7s-wVD8AGC8cKB2',
+    //     },
+    //     // requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
+    // },
     {
         name: 'Google test content -  Google Test Key (HLS, MP4, Widevine, Google, CBCS)',
         manifestUri: 'https://storage.googleapis.com/wvmedia/2018/cmaf/h264/24/llama/llama_h264_24fps_cmaf_hls_cbcs.m3u8',
@@ -675,7 +675,7 @@ shakaAssets.testAssets = [
     },
   {
         name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, Widevine, mpx, CENC)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-1.ism/index.mpd',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-1.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
@@ -694,7 +694,7 @@ shakaAssets.testAssets = [
   },
   {
         name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, playReady, mpx, CENC)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-1.ism/index.mpd',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-1.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
@@ -706,13 +706,14 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=uHqXPRKkKPuS&auth=Tx2XdS42UkZ-soNG8-vsATCecNByoGBI',
+            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=uHqXPRKkKPuS&auth=LN-3ZkTesefG9_MC40tcIYAMoACegKA6',
         },
+      // requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
 
   },
   {
         name: 'Viaplay Erik Test content - Multi DRM test Key (HLS, MP4, Widevine, mpx, CBCS)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-hls-test-1.ism/master.m3u8?hls_fmp4',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-hls-1.ism/master.m3u8?hls_fmp4',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
