@@ -675,7 +675,7 @@ shakaAssets.testAssets = [
     },
   {
         name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, Widevine, mpx, CENC)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-1.ism/index.mpd',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-3.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
@@ -694,7 +694,7 @@ shakaAssets.testAssets = [
   },
   {
         name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, playReady, mpx, CENC)',
-        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-1.ism/index.mpd',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-3.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
