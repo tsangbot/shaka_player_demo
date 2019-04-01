@@ -335,7 +335,6 @@ shakaAssets.mpxPlayReadyRequestFilter = function(type, request) {
     if (document.getElementById('mpx_trace_to').value) {
         request.uris[0] += '&traceTo=mailto:' + document.getElementById('mpx_trace_to').value;
     }
-    request.method = "POST";
     console.log('Playready License request');
 
 };
@@ -706,9 +705,9 @@ shakaAssets.testAssets = [
         ],
 
         licenseServers: {
-            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579&releasePid=uHqXPRKkKPuS&auth=LN-3ZkTesefG9_MC40tcIYAMoACegKA6',
+            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
         },
-      // requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
+      requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
 
   },
   {
