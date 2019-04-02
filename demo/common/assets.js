@@ -653,7 +653,7 @@ shakaAssets.testAssets = [
         requestFilter: shakaAssets.mpxWidevineRequestFilter,
         responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
-    {
+  {
         name: 'Viaplay Staging Test by Erik - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/tos-fmp4-hls-cbcs_4.ism/master.m3u8?hls_fmp4',
         releasePid: 'AGdWx86XqcfU',
@@ -671,9 +671,9 @@ shakaAssets.testAssets = [
         },
         requestFilter: shakaAssets.mpxWidevineRequestFilter,
         responseFilter: shakaAssets.mpxWidevineResponseFilter,
-    },
+  },
   {
-        name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, Widevine, mpx, CENC)',
+        name: 'Viaplay Erik Test content 1 - Stream per DASH CPIX (DASH, MP4, Widevine, mpx, CENC)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-3.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
@@ -692,7 +692,7 @@ shakaAssets.testAssets = [
         responseFilter: shakaAssets.mpxWidevineResponseFilter,
   },
   {
-        name: 'Viaplay Erik Test content - Multi DRM test Key (DASH, MP4, playReady, mpx, CENC)',
+        name: 'Viaplay Erik Test content 1 - Stream per DASH CPIX (DASH, MP4, playReady, mpx, CENC)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-test-3.ism/index.mpd',
         releasePid: 'uHqXPRKkKPuS',
 
@@ -711,8 +711,65 @@ shakaAssets.testAssets = [
 
   },
   {
-        name: 'Viaplay Erik Test content - Multi DRM test Key (HLS, MP4, Widevine, mpx, CBCS)',
+        name: 'Viaplay Erik Test content 1 - Stream per HLS CPIX (HLS, MP4, Widevine, mpx, CBCS)',
         manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-hls-1.ism/master.m3u8?hls_fmp4',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.HLS,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+  },
+  {
+        name: 'Viaplay Erik Test content 2 - Stream for DASH + HLS CPIX (DASH, MP4, Widevine, mpx, CENC)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-hls-test-1.ism/index.mpd',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+  },
+  {
+        name: 'Viaplay Erik Test content 2 - Stream for DASH + HLS CPIX (DASH, MP4, playReady, mpx, CENC)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-hls-test-1.ism/index.mpd',
+        releasePid: 'uHqXPRKkKPuS',
+
+        encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
+        source: shakaAssets.Source.UNIFIED_STREAMING,
+        drm: [shakaAssets.KeySystem.PLAYREADY],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.microsoft.playready': 'https://green.playready.entitlement.theplatform.eu/playready/rightsmanager.asmx?schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+      requestFilter: shakaAssets.mpxPlayReadyRequestFilter,
+
+  },
+  {
+        name: 'Viaplay Erik Test content 2 - Stream for DASH + HLS CPIX (HLS, MP4, Widevine, mpx, CBCS)',
+        manifestUri: 'https://live-dev-cdn2-vp.cdn.viaplay.tv/vp/kanal15/fmp4-cenc-test/cpix-mpd-hls-test-1.ism/master.m3u8?hls_fmp4',
         releasePid: 'uHqXPRKkKPuS',
 
         encoder: shakaAssets.Encoder.UNIFIED_STREAMING,
