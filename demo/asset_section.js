@@ -231,7 +231,14 @@ shakaDemo.preparePlayer_ = function(asset) {
       });
     }
 
-    asset = /** @type {shakaAssets.AssetInfo} */ ({
+      let requestFilterSelection, responseFilterSelection;
+
+      if (document.getElementById('mpxDRM').checked) {
+          requestFilterSelection = shakaAssets.mpxWidevineRequestFilter;
+          responseFilterSelection = shakaAssets.mpxWidevineResponseFilter;
+      }
+
+      asset = /** @type {shakaAssets.AssetInfo} */ ({
       manifestUri: document.getElementById('manifestInput').value,
       // Use the custom license server for all key systems.
       // This simplifies configuration for the user.
@@ -239,6 +246,8 @@ shakaDemo.preparePlayer_ = function(asset) {
       licenseServers: licenseServers,
       // Use a custom certificate for all key systems as well
       certificateUri: document.getElementById('certificateInput').value,
+      requestFilter: requestFilterSelection,
+      responseFilter: responseFilterSelection,
     });
   }
 

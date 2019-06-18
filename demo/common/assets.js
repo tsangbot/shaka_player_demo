@@ -280,7 +280,7 @@ shakaAssets.mpxWidevineResponseFilter = function(type, response) {
     // Decode that base64 string into a Uint8Array and replace the response
     // data.  The raw license will be fed to the Widevine CDM.
     response.data = (Uint8ArrayUtils.fromBase64(rawLicenseBase64)).buffer;
-
+    
 
     // Check if we actually got a license, or if we got an error:
   if (!wrapped['getWidevineLicenseResponse']) {
@@ -289,6 +289,7 @@ shakaAssets.mpxWidevineResponseFilter = function(type, response) {
   }
 
     console.log(wrapped);
+    console.log(response.data);
 };
 
 
@@ -345,6 +346,25 @@ shakaAssets.mpxPlayReadyRequestFilter = function(type, request) {
 /** @const {!Array.<shakaAssets.AssetInfo>} */
 shakaAssets.testAssets = [
   // Shaka assets {{{
+    {
+        name: 'Viaplay Movie Subscription Rights test  - TEST (DASH, Widevine, mpx)',
+        manifestUri: 'https://dev-vod1-dash-cdn1-vp-cdn-viaplay-tv.akamaized.net/9e475e0/QA20213202-1521954099380.ism/index.mpd?',
+        releasePid: 'osMODaDC2XEP',
+
+        encoder: shakaAssets.Encoder.SHAKA_PACKAGER,
+        source: shakaAssets.Source.SHAKA,
+        drm: [shakaAssets.KeySystem.WIDEVINE],
+        features: [
+            shakaAssets.Feature.DASH,
+            shakaAssets.Feature.MP4,
+        ],
+
+        licenseServers: {
+            'com.widevine.alpha': 'https://widevine.entitlement.theplatform.eu/wv/web/ModularDrm/getWidevineLicense?form=json&schema=1.0&account=http://access.auth.theplatform.com/data/Account/2400876579',
+        },
+        requestFilter: shakaAssets.mpxWidevineRequestFilter,
+        responseFilter: shakaAssets.mpxWidevineResponseFilter,
+    },
     {
         name: 'Viaplay Staging Test content 01 - Trailer with Viaplay Key (HLS, MP4, Widevine, mpx, CBCS)',
         manifestUri: 'https://s3-eu-west-1.amazonaws.com/tpuk.eu-test/packaged_01/h264_master.m3u8',
@@ -683,6 +703,7 @@ shakaAssets.testAssets = [
         features: [
             shakaAssets.Feature.DASH,
             shakaAssets.Feature.MP4,
+            shakaAssets.Feature.OFFLINE,
         ],
 
         licenseServers: {

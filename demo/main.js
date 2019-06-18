@@ -453,6 +453,18 @@ shakaDemo.postBrowserCheckParams_ = function(params) {
     jumpLargeGaps.checked =
         shakaDemo.player_.getConfiguration().streaming.jumpLargeGaps;
   }
+    //
+    // let mpxDRM = document.getElementById('mpxDRM');
+    // if ('mpxDRM' in params) {
+    //     mpxDRM.checked = true;
+    //     // Call onJumpLargeGapsChange_ manually, because setting checked
+    //     // programatically doesn't fire a 'change' event.
+    //     let fakeEvent = /** @type {!Event} */({target: mpxDRM});
+    //     shakaDemo.onJumpLargeGapsChange_(fakeEvent);
+    // } else {
+    //     mpxDRM.checked =
+    //         shakaDemo.player_.getConfiguration().streaming.jumpLargeGaps;
+    // }
 
   if ('noadaptation' in params) {
     let enableAdaptation = document.getElementById('enableAdaptation');
