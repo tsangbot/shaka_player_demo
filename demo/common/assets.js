@@ -303,6 +303,10 @@ shakaAssets.mpxWidevineRequestFilter = function(type, request) {
     const StringUtils = shaka.util.StringUtils;
     if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
     request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
+
+    if (!request.uris[0].includes("access.auth.theplatform.com")) {
+        request.uris[0] += "&account=http://access.auth.theplatform.com/data/Account/" +  document.getElementById('mpx_account').value;
+    }
     request.uris[0] += "&_releasePid=" + document.getElementById('video_rpid').value;
     request.uris[0] += "&token=" + document.getElementById('mpx_token').value;
     if (document.getElementById('mpx_trace_to').value) {
@@ -330,7 +334,10 @@ shakaAssets.mpxWidevineRequestFilter = function(type, request) {
  */
 shakaAssets.mpxPlayReadyRequestFilter = function(type, request) {
     if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) return;
-    // request.uris[0] = request.uris[0].replace('/getWidevineLicense', '');
+
+    if (!request.uris[0].includes("access.auth.theplatform.com")) {
+        request.uris[0] += "&account=http://access.auth.theplatform.com/data/Account/" +  document.getElementById('mpx_account').value;
+    }
     request.uris[0] += "&releasePid=" + document.getElementById('video_rpid').value;
     request.uris[0] += "&auth=" + document.getElementById('mpx_token').value;
     if (document.getElementById('mpx_trace_to').value) {

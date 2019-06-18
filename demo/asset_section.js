@@ -231,11 +231,16 @@ shakaDemo.preparePlayer_ = function(asset) {
       });
     }
 
-      let requestFilterSelection, responseFilterSelection;
+      let requestFilterSelection;
+      let responseFilterSelection;
 
       if (document.getElementById('mpxDRM').checked) {
-          requestFilterSelection = shakaAssets.mpxWidevineRequestFilter;
-          responseFilterSelection = shakaAssets.mpxWidevineResponseFilter;
+        if (licenseServerUri.includes('widevine.entitlement')) {
+            requestFilterSelection = shakaAssets.mpxWidevineRequestFilter;
+            responseFilterSelection = shakaAssets.mpxWidevineResponseFilter;
+        } else if (licenseServerUri.includes('playready.entitlement')) {
+            responseFilterSelection = shakaAssets.mpxPlayReadyRequestFilter;
+        }
       }
 
       asset = /** @type {shakaAssets.AssetInfo} */ ({
