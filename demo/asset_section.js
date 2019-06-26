@@ -239,7 +239,7 @@ shakaDemo.preparePlayer_ = function(asset) {
             requestFilterSelection = shakaAssets.mpxWidevineRequestFilter;
             responseFilterSelection = shakaAssets.mpxWidevineResponseFilter;
         } else if (licenseServerUri.includes('playready.entitlement')) {
-            responseFilterSelection = shakaAssets.mpxPlayReadyRequestFilter;
+            requestFilterSelection = shakaAssets.mpxPlayReadyRequestFilter;
         }
       }
 
